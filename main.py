@@ -154,20 +154,21 @@ def main():
         logger.error("No token provided. Please set the TELEGRAM_BOT_TOKEN environment variable.")
         return
 
-    REQUEST_KWARGS={
+    REQUEST_KWARGS={}
+    PROXY_URL = os.getenv('PROXY_URL')
+    if PROXY_URL is not None:
         # "USERNAME:PASSWORD@" is optional, if you need authentication:
-        'proxy_url': 'http://192.168.101.13:7890',
-    }
-    updater = Updater(TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
-
-    dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", help_command))
-    dp.add_handler(CommandHandler("youtube", download_youtube))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
+        # 'proxy_url': 'http://192.168.101.13:7890',
+        REQUEST_KWARGS['proxy_url'] = PROXY_URL
 
     # 使用run_polling()的try-except块以优雅地处理意外情况
     try:
+        updater = Updater(TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
+        dp = updater.dispatcher
+        dp.add_handler(CommandHandler("start", start))
+        dp.add_handler(CommandHandler("help", help_command))
+        dp.add_handler(CommandHandler("youtube", download_youtube))
+        dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
         updater.start_polling()
     except Exception as e:
         logger.error("Error in running bot: %s", str(e))

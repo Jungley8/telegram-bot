@@ -5,6 +5,6 @@ services:
     build: .
     container_name: telegram-bot
     env_file:
-      - .env.example
+      - .env
     volumes:
       - ./downloads:/app/downloads
