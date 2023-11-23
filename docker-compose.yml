@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  telegram-bot:
+    build: .
+    container_name: telegram-bot
+    env_file:
+      - .env.example
+    volumes:
+      - ./downloads:/app/downloads
